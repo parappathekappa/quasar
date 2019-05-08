@@ -97,8 +97,14 @@ export default Vue.extend({
   watch: {
     innerValue: {
       handler () {
-        if (this.useInput === true && this.fillInput === true && this.dialog !== true && this.menu !== true) {
+        if (
+          (this.useInput === true && this.fillInput === true && this.multiple !== true) &&
+          ((this.dialog !== true && this.menu !== true) || this.hasValue !== true)
+        ) {
           this.__resetInputValue()
+          if (this.dialog === true || this.menu === true) {
+            this.filter('')
+          }
         }
       },
       immediate: true
@@ -283,7 +289,6 @@ export default Vue.extend({
 
       const optValue = this.__getOptionValue(opt)
 
-      this.multiple !== true && console.log('HIT toggle', optValue)
       this.multiple !== true && this.updateInputValue(this.fillInput === true ? optValue : '', true)
       this.focus()
 
@@ -482,7 +487,6 @@ export default Vue.extend({
             )
           }
 
-          console.log('HIT 2')
           this.updateInputValue('')
         }
 
@@ -498,7 +502,6 @@ export default Vue.extend({
         this.dialog !== true && this.__closeMenu()
       }
       else if (this.innerLoading !== true) {
-        console.log('HIT 3')
         this.showPopup()
       }
     },
@@ -672,13 +675,9 @@ export default Vue.extend({
           this.filter(this.inputValue)
         }, this.inputDebounce)
       }
-      else if (this.noOptions !== true || this.$scopedSlots['no-option'] !== void 0) {
-        this.menu = true
-      }
     },
 
     updateInputValue (val, noFiltering) {
-      console.log('updateInputValue', val)
       if (this.useInput === true) {
         if (this.inputValue !== val) {
           this.inputValue = val
@@ -778,7 +777,6 @@ export default Vue.extend({
     },
 
     __onControlFocusin (e) {
-      console.log('focusin')
       clearTimeout(this.focusoutTimer)
 
       if (this.editable !== true || this.focused === true) {
@@ -794,7 +792,6 @@ export default Vue.extend({
     },
 
     __onControlFocusout (e) {
-      console.log('focusout')
       clearTimeout(this.focusoutTimer)
 
       this.focusoutTimer = setTimeout(() => {
@@ -809,7 +806,6 @@ export default Vue.extend({
           this.$emit('blur', e)
         }
 
-        console.log('HIT focusout')
         this.__resetInputValue()
         this.__closeMenu()
       }, 100)
@@ -918,7 +914,6 @@ export default Vue.extend({
           hide: e => {
             this.hidePopup()
             this.$emit('blur', e)
-            console.log('HIT dialog hide')
             this.__resetInputValue()
           },
           show: () => {
@@ -933,7 +928,6 @@ export default Vue.extend({
     },
 
     __closeMenu () {
-      console.log('closeMenu')
       this.menu = false
 
       clearTimeout(this.filterId)
