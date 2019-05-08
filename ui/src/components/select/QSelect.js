@@ -95,10 +95,13 @@ export default Vue.extend({
   },
 
   watch: {
-    innerValue (v) {
-      if (this.useInput === true && this.fillInput === true && this.dialog !== true && this.menu !== true && v.length > 0) {
-        this.__resetInputValue()
-      }
+    innerValue: {
+      handler () {
+        if (this.useInput === true && this.fillInput === true && this.dialog !== true && this.menu !== true) {
+          this.__resetInputValue()
+        }
+      },
+      immediate: true
     },
 
     menu (show) {
@@ -673,11 +676,13 @@ export default Vue.extend({
 
     updateInputValue (val, noFiltering) {
       console.log('updateInputValue', val)
-      if (this.inputValue !== val) {
-        this.inputValue = val
-      }
+      if (this.useInput === true) {
+        if (this.inputValue !== val) {
+          this.inputValue = val
+        }
 
-      noFiltering !== true && this.filter(val)
+        noFiltering !== true && this.filter(val)
+      }
     },
 
     filter (val) {
@@ -694,7 +699,6 @@ export default Vue.extend({
 
       if (
         val !== '' &&
-        this.innerValue.length > 0 &&
         this.multiple !== true &&
         this.innerValue.length > 0 &&
         val === this.__getOptionValue(this.innerValue[0])
@@ -957,7 +961,7 @@ export default Vue.extend({
     },
 
     __resetInputValue () {
-      this.updateInputValue(
+      this.useInput === true && this.updateInputValue(
         this.multiple !== true && this.fillInput === true && this.innerValue.length > 0
           ? this.__getOptionValue(this.innerValue[0]) || ''
           : '',

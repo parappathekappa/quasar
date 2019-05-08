@@ -55,6 +55,24 @@
           </q-item>
         </template>
       </q-select>
+
+      <q-select
+        filled
+        ref="sel1"
+        v-model="model"
+        label="Simple"
+        :options="options"
+        style="width: 250px"
+        clearable
+      >
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No results
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
     </div>
   </div>
 </template>
@@ -67,7 +85,7 @@ const stringOptions = [
 export default {
   data () {
     return {
-      model: null,
+      model: 'Twitter',
       options: stringOptions
     }
   },
