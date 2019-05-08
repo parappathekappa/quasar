@@ -42,7 +42,7 @@
         hide-selected
         fill-input
         input-debounce="0"
-        label="Hide selected"
+        label="Hide selected, no filter"
         :options="options"
         style="width: 250px"
         clearable
@@ -58,7 +58,7 @@
 
       <q-select
         filled
-        ref="sel1"
+        ref="sel3"
         v-model="model"
         label="Simple"
         :options="options"

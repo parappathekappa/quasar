@@ -171,6 +171,7 @@ export default Vue.extend({
 
   methods: {
     focus () {
+      console.log('focus')
       let target = this.$refs.target
       if (target !== void 0) {
         target.matches('[tabindex]') || (target = target.querySelector('[tabindex]'))

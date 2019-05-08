@@ -672,6 +672,9 @@ export default Vue.extend({
           this.filter(this.inputValue)
         }, this.inputDebounce)
       }
+      else if (this.noOptions !== true || this.$scopedSlots['no-option'] !== void 0) {
+        this.menu = true
+      }
     },
 
     updateInputValue (val, noFiltering) {
@@ -775,6 +778,9 @@ export default Vue.extend({
     },
 
     __onControlFocusin (e) {
+      console.log('focusin')
+      clearTimeout(this.focusoutTimer)
+
       if (this.editable !== true || this.focused === true) {
         return
       }
@@ -788,6 +794,9 @@ export default Vue.extend({
     },
 
     __onControlFocusout (e) {
+      console.log('focusout')
+      clearTimeout(this.focusoutTimer)
+
       this.focusoutTimer = setTimeout(() => {
         clearTimeout(this.inputTimer)
 
@@ -844,7 +853,7 @@ export default Vue.extend({
         },
         on: {
           '&scroll': this.__hydrateOptions,
-          hide: this.__closeMenu
+          'before-hide': this.__closeMenu
         }
       }, child)
     },
@@ -924,6 +933,7 @@ export default Vue.extend({
     },
 
     __closeMenu () {
+      console.log('closeMenu')
       this.menu = false
 
       clearTimeout(this.filterId)
@@ -936,6 +946,8 @@ export default Vue.extend({
     },
 
     showPopup (e) {
+      clearTimeout(this.focusoutTimer)
+
       if (this.focused === false) {
         if (this.hasDialog === true) {
           this.focused = true
